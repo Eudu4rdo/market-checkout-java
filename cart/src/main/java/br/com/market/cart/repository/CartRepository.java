@@ -1,6 +1,7 @@
 package br.com.market.cart.repository;
 
 import br.com.market.cart.model.Cart;
+import br.com.market.cart.model.Product;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

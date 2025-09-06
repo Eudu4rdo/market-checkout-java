@@ -24,4 +24,8 @@ public class Cart {
     public List<CartItem> getItems() {
         return items;
     }
+
+    public void setItems(long product_id, int quantity) {
+        this.items = items;
+    }
 }
