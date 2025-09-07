@@ -34,4 +34,14 @@ public class CartController {
         }
         return ResponseEntity.ok(cartService.addProduct(id, productId, quantity));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteProduct(@PathVariable long id, @RequestBody Map<String, Object> productIntent) {
+        Long productId = (Long) productIntent.getOrDefault("productId", null);
+        int quantity = (int) productIntent.getOrDefault("quantity", 1);
+        if(productId == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product ID Not Found.");
+        }
+        return ResponseEntity.ok(cartService.removeProduct(id, productId, quantity));
+    }
 }
