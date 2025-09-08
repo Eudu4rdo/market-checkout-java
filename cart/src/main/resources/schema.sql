@@ -7,7 +7,7 @@ CREATE TABLE products (
     quantity INT
 );
 
-INSERT INTO products (name, price, qtd) VALUES
+INSERT INTO products (name, price, quantity) VALUES
 ('Camiseta Básica Branca', 49.90, 100),
 ('Camiseta Básica Preta', 49.90, 80),
 ('Calça Jeans Slim Azul', 129.90, 50),
@@ -34,7 +34,7 @@ CREATE TABLE carts (
     id BIGINT AUTO_INCREMENT PRIMARY KEY
 );
 
-INSERT INTO carts DEFAULT VALUES (1),(2),(3),(4),(5);
+INSERT INTO carts (id) VALUES (1),(2),(3),(4),(5);
 
 DROP TABLE IF EXISTS cart_items;
 CREATE TABLE cart_items (

@@ -27,7 +27,8 @@ public class CartController {
 
     @PostMapping("/{id}")
     public ResponseEntity<?> addProduct(@PathVariable long id,@RequestBody Map<String, Object> productIntent) {
-        Long productId = (Long) productIntent.getOrDefault("productId", null);
+        Number value = (Number) productIntent.get("productId");
+        Long productId = value != null ? value.longValue() : null;
         int quantity = (int) productIntent.getOrDefault("quantity", 1);
         if(productId == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product ID Not Found.");
@@ -37,7 +38,8 @@ public class CartController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable long id, @RequestBody Map<String, Object> productIntent) {
-        Long productId = (Long) productIntent.getOrDefault("productId", null);
+        Number value = (Number) productIntent.get("productId");
+        Long productId = value != null ? value.longValue() : null;
         int quantity = (int) productIntent.getOrDefault("quantity", 1);
         if(productId == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product ID Not Found.");
