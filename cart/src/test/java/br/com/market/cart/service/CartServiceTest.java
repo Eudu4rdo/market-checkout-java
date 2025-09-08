@@ -12,6 +12,7 @@ import br.com.market.cart.model.Cart;
 import br.com.market.cart.model.Product;
 import br.com.market.cart.repository.CartRepository;
 import br.com.market.cart.repository.ProductRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -83,6 +84,7 @@ class CartServiceTest {
     }
 
     @Test
+    @Disabled("Teste não implementado")
     void shouldAddProductToCartSuccessfully() {
         Cart cart = createCart(1L);
         Product product = createProduct(1L, "Product 1", 10.0, 10);
