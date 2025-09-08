@@ -1,6 +1,7 @@
 package br.com.market.cart.model;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -10,8 +11,8 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<CartItem> items;
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
+    private List<CartItem> items = new ArrayList<>();
 
     public long getId() {
         return id;
@@ -25,7 +26,7 @@ public class Cart {
         return items;
     }
 
-    public void setItems(long product_id, int quantity) {
+    public void setItems(List<CartItem> items) {
         this.items = items;
     }
 }

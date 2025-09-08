@@ -11,6 +11,7 @@ import br.com.market.cart.repository.ProductRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -32,7 +33,7 @@ public class CartService {
 
     public CartDTO getCartById(Long id) {
         Cart cart = getCartOrThrow(id);
-        List<CartItemDTO> itemsDTO = cart.getItems().stream()
+        List<CartItemDTO> itemsDTO = Optional.ofNullable(cart.getItems()).orElse(Collections.emptyList()).stream()
                 .map(item -> new CartItemDTO(
                         item.getProduct().getId(),
                         item.getProduct().getName(),
@@ -45,7 +46,7 @@ public class CartService {
     }
 
     public void addOrUpdateCartItem(Cart cart, Product product, int quantity) {
-        cart.getItems().stream().filter(item -> Objects.equals(item.getProduct().getId(), product.getId())).findFirst()
+        Optional.ofNullable(cart.getItems()).orElse(Collections.emptyList()).stream().filter(item -> Objects.equals(item.getProduct().getId(), product.getId())).findFirst()
                 .map(item -> {
                     int newQty = item.getQuantity() + quantity;
                     productService.validateStockOrThrow(product, newQty);
@@ -64,7 +65,7 @@ public class CartService {
     }
 
     public void removeOrUpdateCartItem(Cart cart, Product product, int quantity) {
-        CartItem item = cart.getItems().stream()
+        CartItem item = Optional.ofNullable(cart.getItems()).orElse(Collections.emptyList()).stream()
                 .filter(i -> Objects.equals(i.getProduct().getId(), product.getId()))
                 .findFirst()
                 .orElseThrow(() -> new CartItemNotFoundException(product.getId(), cart.getId()));
