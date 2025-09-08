@@ -45,14 +45,33 @@ public class CartService {
         return new CartDTO(cart.getId(), itemsDTO);
     }
 
+    @Transactional
+    public CartDTO addProduct(Long cartId, long productId, int quantity) {
+        Product product = productService.findProductOrThrow(productId);
+        Cart cart = getCartOrThrow(cartId);
+        addOrUpdateCartItem(cart, product, quantity);
+        cartRepository.save(cart);
+        return getCartById(cartId);
+    }
+
+    @Transactional
+    public CartDTO removeProduct(Long cartId, long productId, int quantity) {
+        Product product = productService.findProductOrThrow(productId);
+        Cart cart = getCartOrThrow(cartId);
+        removeOrUpdateCartItem(cart, product, quantity);
+        cartRepository.save(cart);
+        return getCartById(cartId);
+    }
+
     public void addOrUpdateCartItem(Cart cart, Product product, int quantity) {
-        Optional.ofNullable(cart.getItems()).orElse(Collections.emptyList()).stream().filter(item -> Objects.equals(item.getProduct().getId(), product.getId())).findFirst()
-                .map(item -> {
-                    int newQty = item.getQuantity() + quantity;
-                    productService.validateStockOrThrow(product, newQty);
-                    item.setQuantity(newQty);
-                    return item;
-                })
+        Optional.ofNullable(cart.getItems()).orElse(Collections.emptyList()).stream().filter(item ->
+                        Objects.equals(item.getProduct().getId(), product.getId())).findFirst()
+                            .map(item -> {
+                                int newQty = item.getQuantity() + quantity;
+                                productService.validateStockOrThrow(product, newQty);
+                                item.setQuantity(newQty);
+                                return item;
+                            })
                 .orElseGet(() -> {
                     productService.validateStockOrThrow(product, quantity);
                     CartItem newItem = new CartItem();
@@ -81,23 +100,5 @@ public class CartService {
         } else {
             throw new InvalidQuantityException(item.getQuantity(), quantity);
         }
-    }
-
-    @Transactional
-    public CartDTO addProduct(Long cartId, long productId, int quantity) {
-        Product product = productService.findProductOrThrow(productId);
-        Cart cart = getCartOrThrow(cartId);
-        addOrUpdateCartItem(cart, product, quantity);
-        cartRepository.save(cart);
-        return getCartById(cartId);
-    }
-
-    @Transactional
-    public CartDTO removeProduct(Long cartId, long productId, int quantity) {
-        Product product = productService.findProductOrThrow(productId);
-        Cart cart = getCartOrThrow(cartId);
-        removeOrUpdateCartItem(cart, product, quantity);
-        cartRepository.save(cart);
-        return getCartById(cartId);
     }
 }
