@@ -1,0 +1,25 @@
+<Configuration status="INFO">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <JsonLayout compact="true" eventEol="true"/>
+        </Console>
+        <RollingFile name="File"
+                     fileName="logs/cart-tracing.log"
+                     filePattern="logs/cart-service-%d{yyyy-MM-dd}-%i.log.gz"
+                     immediateFlush="true">
+            <JsonLayout compact="true" eventEol="true"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="10"/>
+        </RollingFile>
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="File"/>
+        </Root>
+    </Loggers>
+</Configuration>
