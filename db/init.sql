@@ -1,9 +1,13 @@
-DROP TABLE IF EXISTS products;
+-- Remover tabelas na ordem correta para evitar problemas de FK
+DROP TABLE IF EXISTS cart_items CASCADE;
+DROP TABLE IF EXISTS carts CASCADE;
+DROP TABLE IF EXISTS products CASCADE;
 
+-- Tabela de produtos
 CREATE TABLE products (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
-    price DOUBLE,
+    price NUMERIC(10,2),
     quantity INT
 );
 
@@ -29,19 +33,22 @@ INSERT INTO products (name, price, quantity) VALUES
 ('Tênis Casual Branco', 199.90, 30),
 ('Tênis Esportivo Preto', 249.90, 25);
 
-DROP TABLE IF EXISTS carts;
+-- Tabela de carrinhos
 CREATE TABLE carts (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY
+    id BIGSERIAL PRIMARY KEY
 );
 
-INSERT INTO carts (id) VALUES (1),(2),(3),(4),(5);
+-- Insere carrinhos iniciais
+INSERT INTO carts DEFAULT VALUES;
+INSERT INTO carts DEFAULT VALUES;
+INSERT INTO carts DEFAULT VALUES;
+INSERT INTO carts DEFAULT VALUES;
+INSERT INTO carts DEFAULT VALUES;
 
-DROP TABLE IF EXISTS cart_items;
+-- Itens do carrinho
 CREATE TABLE cart_items (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    cart_id BIGINT,
-    product_id BIGINT,
-    quantity INT,
-    FOREIGN KEY (cart_id) REFERENCES carts(id),
-    FOREIGN KEY (product_id) REFERENCES products(id)
+    id BIGSERIAL PRIMARY KEY,
+    cart_id BIGINT REFERENCES carts(id) ON DELETE CASCADE,
+    product_id BIGINT REFERENCES products(id),
+    quantity INT
 );
