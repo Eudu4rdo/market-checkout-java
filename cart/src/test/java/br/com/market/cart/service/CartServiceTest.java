@@ -86,7 +86,6 @@ class CartServiceTest {
     }
 
     @Test
-    @Disabled("Teste não implementado")
     void shouldAddProductToCartSuccessfully() {
         Cart cart = createCart(1L);
         Product product = createProduct(1L, "Product 1", 10.0, 10);

@@ -51,7 +51,19 @@ public class CartService {
         Cart cart = getCartOrThrow(cartId);
         addOrUpdateCartItem(cart, product, quantity);
         cartRepository.save(cart);
-        return getCartById(cartId);
+
+        List<CartItemDTO> itemsDTO = Optional.ofNullable(cart.getItems())
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(item -> new CartItemDTO(
+                        item.getProduct().getId(),
+                        item.getProduct().getName(),
+                        item.getProduct().getPrice(),
+                        item.getQuantity()
+                ))
+                .collect(Collectors.toList());
+
+        return new CartDTO(cart.getId(), itemsDTO);
     }
 
     @Transactional
