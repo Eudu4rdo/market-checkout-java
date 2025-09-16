@@ -1,9 +1,8 @@
 package br.com.market.stock.service;
 
 import br.com.market.stock.dto.ProductDTO;
-import br.com.market.stock.exceptions.AddProductException;
-import br.com.market.stock.exceptions.InsufficientStockException;
 import br.com.market.stock.exceptions.ProductNotFoundException;
+import br.com.market.stock.exceptions.StockOperationException;
 import br.com.market.stock.mapper.ProductMapper;
 import br.com.market.stock.model.Product;
 import br.com.market.stock.repository.ProductRepository;
@@ -30,11 +29,12 @@ public class StockService {
     }
 
     public ProductDTO addProduct(Product product) {
-        Product response = productRepository.save(product);
-        if(response == null) {
-            throw new AddProductException();
+        try {
+            Product response = productRepository.save(product);
+            return productMapper.toDTO(response);
+        } catch (Exception e) {
+            throw new StockOperationException("Add Product Fail. Message: " + e.getMessage());
         }
-        return productMapper.toDTO(response);
     }
 
     public ProductDTO deleteProduct(Long id) {
@@ -60,7 +60,7 @@ public class StockService {
     public ProductDTO decreaseQuantity(Long id, int quantity) {
         Product product = getProductById(id);
         if(product.getQuantity() < quantity) {
-            throw new InsufficientStockException(id);
+            throw new StockOperationException("Quantity is less than the quantity to be decreased.");
         }
         product.setQuantity(product.getQuantity() - quantity);
         return productMapper.toDTO(productRepository.save(product));
