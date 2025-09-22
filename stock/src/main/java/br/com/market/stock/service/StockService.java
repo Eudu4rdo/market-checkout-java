@@ -38,16 +38,26 @@ public class StockService {
     }
 
     public ProductDTO deleteProduct(Long id) {
-        Product product = getProductById(id);
-        productRepository.delete(product);
-        return productMapper.toDTO(product);
+        try {
+            Product product = getProductById(id);
+            productRepository.delete(product);
+            return productMapper.toDTO(product);
+        } catch (Exception e) {
+            throw new StockOperationException("Delete Product Fail. Message: " + e.getMessage());
+        }
     }
 
     public ProductDTO updateProduct(Long id, Product product) {
         Product productToUpdate = getProductById(id);
-        productToUpdate.setName(product.getName());
-        productToUpdate.setPrice(product.getPrice());
-        productToUpdate.setQuantity(product.getQuantity());
+        if (product.getName() != null) {
+            productToUpdate.setName(product.getName());
+        }
+        if (product.getPrice() > 0.0) {
+            productToUpdate.setPrice(product.getPrice());
+        }
+        if (product.getQuantity() > 0) {
+            productToUpdate.setQuantity(product.getQuantity());
+        }
         return productMapper.toDTO(productRepository.save(productToUpdate));
     }
 
